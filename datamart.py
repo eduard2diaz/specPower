@@ -11,11 +11,15 @@ spec_power_original_file = 'Data/specPowerOriginalData.xlsx'
 spec_power_data_transform_file = 'Data/specPowerDataTransform.xlsx'
 spec_power_parameters = [
     {
-        'name': 'Hardware Vendor\t',
+        'name': 'Hardware Vendor',
         'table': 'hardware_vendor'
     },
     {
-        'name': 'Processor ',
+        'name': 'Form Factor',
+        'table': 'form_factor'
+    },
+    {
+        'name': 'Processor',
         'table': 'processor'
     },
     {
@@ -23,7 +27,7 @@ spec_power_parameters = [
         'table': 'dimms'
     },
     {
-        'name': 'Power Supply Details ',
+        'name': 'Power Supply Details',
         'table': 'power_supply_details'
     },
 ]
