@@ -8,7 +8,7 @@ connection = psycopg2.connect(host="localhost", database="specPower", user="post
 cur = connection.cursor()
 
 spec_power_original_file = 'Data/specPowerOriginalData.xlsx'
-spec_power_data_transform_file = 'Data/specPowerDataTransform.xlsx'
+spec_power_data_transform_file = 'Data/specPowerDatamartTransform.xlsx'
 spec_power_parameters = [
     {
         'name': 'Hardware Vendor',
@@ -34,8 +34,11 @@ spec_power_parameters = [
 
 
 def createDataDic(file_path, parameter, db_cursor):
+    db_cursor.execute(
+        sql.SQL("delete from {}")
+            .format(sql.Identifier(parameter['table'])))
+
     reader = pd.read_excel(file_path, header=0)
-    columns = reader.columns
     data_collection_names = []
     data_collection_id = []
     data_collection_counter = 1
@@ -55,7 +58,7 @@ def createDataDic(file_path, parameter, db_cursor):
     reader.to_excel(file_path, index=False)
 
     for obj in range(data_collection_id.__len__()):
-        cur.execute(
+        db_cursor.execute(
             sql.SQL("insert into {} values (%s, %s)")
             .format(sql.Identifier(parameter['table'])),
             [data_collection_id[obj], data_collection_names[obj]])
