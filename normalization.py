@@ -14,14 +14,14 @@ def normalize(current_value, min_value,max_value):
 def parameterNormalization(file_path, parameter):
     reader = pd.read_excel(file_path, header=0)
     column_register = []
-    min = 1000000
-    max = 0
+    min = float("inf")#representa el valor +infinito
+    max = float("-inf")#represente el valor -infinito
     for row in reader[parameter]:
         if row < min:
             min = row
         if row > max:
             max = row
-    print(parameter,"Minimo", min,"Maximo", max,"Iguales",min==max)
+    #print(parameter,"Minimo", min,"Maximo", max,"Iguales",min==max)
     for row in reader[parameter]:
         column_register.append(normalize(row,min,max))
     reader[parameter] = column_register
