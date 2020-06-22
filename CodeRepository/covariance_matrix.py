@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-spec_power_data_file = 'Data/specPowerNormalizationTransform.xlsx'
+spec_power_data_file = '../Data/specPowerDatamartTransform.xlsx'
 covariance_matrix_data_file = 'Data/specPowerCovarianceMatrix.xlsx'
 reader = pd.read_excel(spec_power_data_file, header=0)
 columns = reader.columns

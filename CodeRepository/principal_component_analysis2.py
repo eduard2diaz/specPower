@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
 
-spec_power_data_file = 'Data/specPowerDatamartTransform.xlsx'
+spec_power_data_file = '../Data/specPowerDatamartTransform.xlsx'
 """
 Los 5 pasos del proceso PCA.
 1.Cargar los datos
@@ -24,12 +25,16 @@ data=pd.DataFrame(data=data_csv,columns=columns,index=index)
 print(data.tail(len(data)))
 #como nos damos cuenta estamos pasando la transpuesta,
 #dicha funcion scale lo que hace es centrar y escalar los datos
-scaled_data=preprocessing.scale(data)
+scaler=StandardScaler()
+#calculo la media para poder hacer la transformacion
+scaler.fit(data)
+#Ahora si, escalo los datos y los normalizo
+scaled_data=scaler.transform(data)
 
 pca=PCA()
-#Aqui se hacen los calculos de PCA
+#obtener los componentes principales
 pca.fit(scaled_data)
-#Aqui generamos las coordenadas para una grafica de PCA basado en los datos escalados
+#convertimos nuestros datos con las nuevas dimensiones de PCA
 pca_data=pca.transform(scaled_data)
 """Cada nuevo atributo es una combinacion lineal de los atributos originales. PCA permite describir un conjunto
 de datos en termino de nuevas variables no correlacionadas. Dichos componentes se ordenan por la cantidad

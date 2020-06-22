@@ -3,8 +3,8 @@ import psycopg2
 from psycopg2 import sql
 import pandas as pd
 
-spec_power_original_file = 'Data/specPowerDatamartTransform.xlsx'
-spec_power_data_transform_file = 'Data/specPowerNormalizationTransform.xlsx'
+spec_power_original_file = '../Data/specPowerDatamartTransform.xlsx'
+spec_power_data_transform_file = '../Data/specPowerNormalizationTransform.xlsx'
 
 def normalize(current_value, min_value,max_value):
     min_new_value=0
