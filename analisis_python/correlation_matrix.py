@@ -1,7 +1,7 @@
 import pandas as pd
 
-spec_power_data_file = 'Data/specPowerDatamartTransform.xlsx'
-correlation_matrix_data_file = 'Data/specPowerCorrelationMatrix.xlsx'
+spec_power_data_file = '../Data/specPowerDatamartTransform.xlsx'
+correlation_matrix_data_file = '../Data/specPowerCorrelationMatrix.xlsx'
 reader = pd.read_excel(spec_power_data_file, header=0)
 """
 La idea es ir quitando los atributos que están altamente correlacionados, pues los mismos no aportan

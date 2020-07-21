@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-data_file = '../Data/specPowerDatamartTransform.xlsx'
-covariance_matrix_data_file = '../Data/specPowerCovarianceMatrix.xlsx'
+data_file = '../../Data/specPowerDatamartTransform.xlsx'
+covariance_matrix_data_file = '../../Data/specPowerCovarianceMatrix.xlsx'
 reader = pd.read_excel(data_file, header=0)
 columns = reader.columns
 # print(reader.tail(8)) retorna las ultimas 8 filas

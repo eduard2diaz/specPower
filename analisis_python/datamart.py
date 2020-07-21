@@ -7,8 +7,8 @@ connection = psycopg2.connect(host="localhost", database="specPower", user="post
 # Creamos el cursor con el objeto conexion
 cur = connection.cursor()
 
-spec_power_original_file = 'Data/specPowerOriginalDataTemp.xlsx'
-spec_power_data_transform_file = 'Data/specPowerDatamartTransform.xlsx'
+spec_power_original_file = '../Data/specPowerOriginalDataTemp.xlsx'
+spec_power_data_transform_file = '../Data/specPowerDatamartTransform.xlsx'
 spec_power_parameters = [
     {
         'name': 'Hardware Vendor',

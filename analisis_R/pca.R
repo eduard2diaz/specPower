@@ -1,7 +1,7 @@
 #install.packages("corrplot")
 library(corrplot)
 
-datos <- read.csv("specNormalizado.csv")
+datos <- read.csv("../Data/specPowerDatamartTransform.csv")
 
 matCorr <- cor(datos)
 

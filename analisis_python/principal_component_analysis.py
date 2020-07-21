@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
 
-spec_power_data_file = 'Data/specPowerDatamartTransform.xlsx'
+spec_power_data_file = '../Data/specPowerDatamartTransform.xlsx'
 """
 Los 5 pasos del proceso PCA.
 1.Cargar los datos
