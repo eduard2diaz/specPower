@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 
-spec_power_data_file = '../Data/specPowerDatamartTransform.xlsx'
+spec_power_data_file = '../../Data/specPowerDatamartTransform.xlsx'
 """
 Los 5 pasos del proceso PCA.
 1.Cargar los datos

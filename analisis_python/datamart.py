@@ -7,8 +7,8 @@ connection = psycopg2.connect(host="localhost", database="specPower", user="post
 # Creamos el cursor con el objeto conexion
 cur = connection.cursor()
 
-spec_power_original_file = '../Data/specPowerOriginalDataTemp.xlsx'
-spec_power_data_transform_file = '../Data/specPowerDatamartTransform.xlsx'
+spec_power_original_file = './../Data/specPowerOriginalDataTemp.xlsx'
+spec_power_data_transform_file = './../Data/specPowerDatamartTransform.xlsx'
 spec_power_parameters = [
     {
         'name': 'Hardware Vendor',
@@ -31,7 +31,6 @@ spec_power_parameters = [
         'table': 'power_supply_details'
     },
 ]
-
 
 def createDataDic(file_path, parameter, db_cursor):
     db_cursor.execute(
@@ -62,7 +61,6 @@ def createDataDic(file_path, parameter, db_cursor):
             sql.SQL("insert into {} values (%s, %s)")
             .format(sql.Identifier(parameter['table'])),
             [data_collection_id[obj], data_collection_names[obj]])
-
 
 shutil.copy2(spec_power_original_file, spec_power_data_transform_file)
 for parameter in spec_power_parameters:
