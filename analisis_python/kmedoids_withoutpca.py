@@ -5,7 +5,16 @@ import matplotlib.pyplot as plt
 from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 
+def inspect(results):
+    rh          = [tuple(result[2][0][0]) for result in results]
+    lh          = [tuple(result[2][0][1]) for result in results]
+    supports    = [result[1] for result in results]
+    confidences = [result[2][0][2] for result in results]
+    lifts       = [result[2][0][3] for result in results]
+    return list(zip(rh, lh, supports, confidences, lifts))
+
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
+features_data = features.values
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
@@ -41,7 +50,6 @@ for i,pred in enumerate(y_kmedoids):
 silhouette_avg = metrics.silhouette_score(scaled_data, y_kmedoids)
 print ('El coeficiente de silueta del agrupamiento es = ', silhouette_avg)
 
-
 #Planteamos los datos como la relacion lineal de solamente dos componentes
 modelo_pca = PCA(n_components = 2)
 dataset_questions_pca = modelo_pca.fit(scaled_data)
@@ -57,3 +65,21 @@ xvector=modelo_pca.components_[0]*max(pca[:,0])
 yvector=modelo_pca.components_[1]*max(pca[:,1])
 columas=features.columns
 plt.show()
+
+from apyori import apriori
+transactions=[]
+indices=[]
+for k in range(1):
+    transactions.clear()
+    indices.clear()
+    print("REALIZANDO CLUSTER PARA K=",k)
+    for i, pred in enumerate(y_kmedoids):
+        if pred==k:
+            indices.append(i)
+    transactions=features.iloc[indices]
+    print("Realizando Apriori para ",len(transactions),"elementos")
+    rules = apriori(transactions, min_support = 0.1, min_confidence = 0.6, min_lift = 3, min_length = 2)
+    results=list(rules)
+    resultDataFrame = pd.DataFrame(inspect(results),columns=['rhs', 'lhs', 'support', 'confidence', 'lift'])
+    print(resultDataFrame)
+    print("Finaliza Apriori PARA K=",k)
