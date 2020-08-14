@@ -2,8 +2,9 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
+from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
+
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
 #PCA
@@ -18,9 +19,11 @@ dataset_questions_pca = pca.fit_transform(scaled_data)
 #Aplico el metodo del codo sobre el conjunto de datos
 wcss = []
 for i in range(1, 7):
-    kmeans = KMeans(n_clusters = i, init = 'k-means++', random_state = 0)
-    kmeans.fit(dataset_questions_pca)
-    wcss.append(kmeans.inertia_)
+    kmedoids = KMedoids(n_clusters = i, random_state = 0)
+    kmedoids.fit(dataset_questions_pca)
+    sse=kmedoids.inertia_
+    print("Clusters",i,"SSE",sse)
+    wcss.append(sse)
 plt.plot(range(1, 7), wcss)
 plt.title('The Elbow Method')
 plt.xlabel('Number of clusters')
@@ -29,22 +32,23 @@ plt.show()
 
 
 #Aplico k-means sobre el conjunto brindado por pca
-kmeans = KMeans(n_clusters = 3, init = 'k-means++',max_iter=300,n_init=10,random_state=1)
-y_kmeans = kmeans.fit_predict(dataset_questions_pca)
-initial_centroids=kmeans.cluster_centers_
+kmedoids = KMedoids(n_clusters = 3, random_state=0)
+y_kmedoids = kmedoids.fit_predict(dataset_questions_pca)
+initial_centroids=kmedoids.cluster_centers_
 
 print("Centroides iniciales")
 for instance in initial_centroids:
     print(instance)
 
-silhouette_avg = metrics.silhouette_score(scaled_data, y_kmeans)
+silhouette_avg = metrics.silhouette_score(scaled_data, y_kmedoids)
 print ('El coeficiente de silueta del agrupamiento es = ', silhouette_avg)
 
-plt.scatter(dataset_questions_pca[y_kmeans == 0, 0], dataset_questions_pca[y_kmeans == 0, 1], c = 'red', label = 'Cluster 1')
-plt.scatter(dataset_questions_pca[y_kmeans == 1, 0], dataset_questions_pca[y_kmeans == 1, 1], c = 'blue', label = 'Cluster 2')
-plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
-plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], c = 'yellow', label = 'Centroides')
-plt.title('Ploteo K-Means')
+
+plt.scatter(dataset_questions_pca[y_kmedoids == 0, 0], dataset_questions_pca[y_kmedoids == 0, 1], c = 'red', label = 'Cluster 1')
+plt.scatter(dataset_questions_pca[y_kmedoids == 1, 0], dataset_questions_pca[y_kmedoids == 1, 1], c = 'blue', label = 'Cluster 2')
+plt.scatter(dataset_questions_pca[y_kmedoids == 2, 0], dataset_questions_pca[y_kmedoids == 2, 1], c = 'green', label = 'Cluster 3')
+plt.scatter(kmedoids.cluster_centers_[:, 0], kmedoids.cluster_centers_[:, 1], c = 'yellow', label = 'Centroides')
+plt.title('Ploteo K-Medoides')
 plt.xlabel('PCA 1')
 plt.ylabel('PCA 2')
 plt.legend()
