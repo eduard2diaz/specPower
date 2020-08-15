@@ -7,7 +7,7 @@ from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
-columns=features.columns
+columnas=features.columns
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
@@ -40,8 +40,8 @@ for instance in initial_centroids:
     print(instance)
     temp = []
     for i in range(len(instance)):
-        media = descripcion[columns[i]]['mean']
-        std = descripcion[columns[i]]['std']
+        media = descripcion[columnas[i]]['mean']
+        std = descripcion[columnas[i]]['std']
         temp.append(round(instance[i] * std + media))
     initial_centroids_desnormalize.append(temp)
     print(temp)
@@ -66,7 +66,6 @@ plt.scatter(centroides_pca[:,0],centroides_pca[:,1],marker='x',s=100,linewidths=
 
 xvector=modelo_pca.components_[0]*max(pca[:,0])
 yvector=modelo_pca.components_[1]*max(pca[:,1])
-columas=features.columns
 plt.show()
 
 #tengo dudas con el 25 y el 34
@@ -81,3 +80,11 @@ for k in range(3):
     transactions=features.iloc[indices,indices_columnas]
     df=pd.DataFrame(transactions)
     df.to_excel('./ClusteringResult/cluster_kmedoidesk='+str(k)+'.xlsx', index=False)
+
+#Filtrando campos interesantes de los centroides iniciales
+for instance in initial_centroids_desnormalize:
+    temp=[]
+    for i in range(len(instance)):
+        if i in indices_columnas:
+            temp.append({columnas[i]:instance[i]})
+    print(temp)
