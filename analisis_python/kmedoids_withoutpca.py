@@ -116,9 +116,11 @@ for k in range(3):
         createDataDic(name, parameter, cur)
 
 #Filtrando campos interesantes de los centroides iniciales
+fields_filters=[]
 for instance in initial_centroids_desnormalize:
     temp=[]
     for i in range(len(instance)):
         if i in indices_columnas:
             temp.append({columnas[i]:instance[i]})
     print(temp)
+    fields_filters.append(temp)
