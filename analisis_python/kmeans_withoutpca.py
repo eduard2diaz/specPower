@@ -4,9 +4,42 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn import metrics
+import psycopg2
+from psycopg2 import sql
+
+
+connection = psycopg2.connect(host="localhost", database="specPower", user="postgres", password="postgres")
+# Creamos el cursor con el objeto conexion
+cur = connection.cursor()
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
 columnas=features.columns
+spec_power_parameters = [
+    {
+        'name': 'Hardware Vendor',
+        'table': 'hardware_vendor'
+    },
+    {
+        'name': 'Processor',
+        'table': 'processor'
+    },
+    {
+        'name': 'Power Supply Details',
+        'table': 'power_supply_details'
+    },
+]
+
+def createDataDic(file_path, parameter,db_cursor):
+    reader = pd.read_excel(file_path, header=0)
+    column_register = []
+
+    for row in reader[parameter['name']]:
+        db_cursor.execute("select name from "+parameter['table']+" where id="+str(row))
+        result=db_cursor.fetchone()
+        column_register.append(result[0])
+    reader[parameter['name']] = column_register
+    reader.to_excel(file_path, index=False)
+
 descripcion=features.describe()
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
@@ -78,8 +111,13 @@ for k in range(3):
         if pred==k:
             indices.append(i)
     transactions=features.iloc[indices,indices_columnas]
+
     df=pd.DataFrame(transactions)
-    df.to_excel('./ClusteringResult/cluster_kmeansk='+str(k)+'.xlsx', index=False)
+    name='./ClusteringResult/cluster_kmeansk=' + str(k) + '.xlsx'
+    df.to_excel(name, index=False)
+
+    for parameter in spec_power_parameters:
+        createDataDic(name, parameter,cur)
 
 #Filtrando campos interesantes de los centroides iniciales
 for instance in initial_centroids_desnormalize:
