@@ -5,14 +5,6 @@ import matplotlib.pyplot as plt
 from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 
-def inspect(results):
-    rh          = [tuple(result[2][0][0]) for result in results]
-    lh          = [tuple(result[2][0][1]) for result in results]
-    supports    = [result[1] for result in results]
-    confidences = [result[2][0][2] for result in results]
-    lifts       = [result[2][0][3] for result in results]
-    return list(zip(rh, lh, supports, confidences, lifts))
-
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
@@ -42,7 +34,6 @@ etiquetas=kmedoids.labels_
 print("Centroides iniciales")
 for instance in initial_centroids:
     print(instance)
-
 print("Resumen de agrupamiento")
 for i,pred in enumerate(y_kmedoids):
     print("Muestra",i,"se encuentra en ",pred)
@@ -65,3 +56,16 @@ xvector=modelo_pca.components_[0]*max(pca[:,0])
 yvector=modelo_pca.components_[1]*max(pca[:,1])
 columas=features.columns
 plt.show()
+
+#tengo dudas con el 25 y el 34
+indices_columnas=[0,1,3,25,34,35,37,38,40]
+for k in range(3):
+    transactions = []
+    indices = []
+    print("Exportando cluster para K=",k)
+    for i, pred in enumerate(y_kmedoids):
+        if pred==k:
+            indices.append(i)
+    transactions=features.iloc[indices,indices_columnas]
+    df=pd.DataFrame(transactions)
+    df.to_excel('./ClusteringResult/cluster_kmedoidesk='+str(k)+'.xlsx', index=False)

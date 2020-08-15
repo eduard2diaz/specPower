@@ -9,6 +9,7 @@ features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
+print(scaled_data)
 
 #Analizamos la cantidad de cluster a partir de la informacion obtenida de la relacion lineal del pca
 #Aplico el metodo del codo sobre el conjunto de datos
@@ -55,3 +56,18 @@ xvector=modelo_pca.components_[0]*max(pca[:,0])
 yvector=modelo_pca.components_[1]*max(pca[:,1])
 columas=features.columns
 plt.show()
+
+
+#tengo dudas con el 25 y el 34
+indices_columnas=[0,1,3,25,34,35,37,38,40]
+for k in range(3):
+    transactions = []
+    indices = []
+    print("Exportando cluster para K=",k)
+    for i, pred in enumerate(y_kmeans):
+        if pred==k:
+            indices.append(i)
+            print(i)
+    transactions=features.iloc[indices,indices_columnas]
+    df=pd.DataFrame(transactions)
+    df.to_excel('./ClusteringResult/cluster_kmeansk='+str(k)+'.xlsx', index=False)
