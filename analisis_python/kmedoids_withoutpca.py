@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
@@ -6,9 +7,11 @@ from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
+columns=features.columns
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
+descripcion=features.describe()
 
 #Analizamos la cantidad de cluster a partir de la informacion obtenida de la relacion lineal del pca
 #Aplico el metodo del codo sobre el conjunto de datos
@@ -32,8 +35,17 @@ initial_centroids=kmedoids.cluster_centers_
 etiquetas=kmedoids.labels_
 
 print("Centroides iniciales")
+initial_centroids_desnormalize=[]
 for instance in initial_centroids:
     print(instance)
+    temp = []
+    for i in range(len(instance)):
+        media = descripcion[columns[i]]['mean']
+        std = descripcion[columns[i]]['std']
+        temp.append(round(instance[i] * std + media))
+    initial_centroids_desnormalize.append(temp)
+    print(temp)
+
 print("Resumen de agrupamiento")
 for i,pred in enumerate(y_kmedoids):
     print("Muestra",i,"se encuentra en ",pred)
