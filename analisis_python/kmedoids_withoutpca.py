@@ -14,7 +14,6 @@ def inspect(results):
     return list(zip(rh, lh, supports, confidences, lifts))
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
-features_data = features.values
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
@@ -43,6 +42,7 @@ etiquetas=kmedoids.labels_
 print("Centroides iniciales")
 for instance in initial_centroids:
     print(instance)
+
 print("Resumen de agrupamiento")
 for i,pred in enumerate(y_kmedoids):
     print("Muestra",i,"se encuentra en ",pred)
@@ -65,21 +65,3 @@ xvector=modelo_pca.components_[0]*max(pca[:,0])
 yvector=modelo_pca.components_[1]*max(pca[:,1])
 columas=features.columns
 plt.show()
-
-from apyori import apriori
-transactions=[]
-indices=[]
-for k in range(1):
-    transactions.clear()
-    indices.clear()
-    print("REALIZANDO CLUSTER PARA K=",k)
-    for i, pred in enumerate(y_kmedoids):
-        if pred==k:
-            indices.append(i)
-    transactions=features.iloc[indices]
-    print("Realizando Apriori para ",len(transactions),"elementos")
-    rules = apriori(transactions, min_support = 0.1, min_confidence = 0.6, min_lift = 3, min_length = 2)
-    results=list(rules)
-    resultDataFrame = pd.DataFrame(inspect(results),columns=['rhs', 'lhs', 'support', 'confidence', 'lift'])
-    print(resultDataFrame)
-    print("Finaliza Apriori PARA K=",k)
