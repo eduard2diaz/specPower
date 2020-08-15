@@ -6,6 +6,8 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 
 features = pd.read_csv('./../Data/specPowerDatamartTransform.csv')
+columns=features.columns
+descripcion=features.describe()
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
@@ -31,8 +33,17 @@ initial_centroids=kmeans.cluster_centers_
 etiquetas=kmeans.labels_
 
 print("Centroides iniciales")
+initial_centroids_desnormalize=[]
 for instance in initial_centroids:
     print(instance)
+    temp = []
+    for i in range(len(instance)):
+        media = descripcion[columns[i]]['mean']
+        std = descripcion[columns[i]]['std']
+        temp.append(round(instance[i] * std + media))
+    initial_centroids_desnormalize.append(temp)
+    print(temp)
+
 print("Resumen de agrupamiento")
 for i,pred in enumerate(y_kmeans):
     print("Muestra",i,"se encuentra en ",pred)
@@ -67,7 +78,6 @@ for k in range(3):
     for i, pred in enumerate(y_kmeans):
         if pred==k:
             indices.append(i)
-            print(i)
     transactions=features.iloc[indices,indices_columnas]
     df=pd.DataFrame(transactions)
     df.to_excel('./ClusteringResult/cluster_kmeansk='+str(k)+'.xlsx', index=False)
