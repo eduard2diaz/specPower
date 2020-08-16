@@ -134,12 +134,13 @@ for instance in initial_centroids_desnormalize:
     for i in range(len(instance)):
         if i in indices_columnas:
             temp.append({columnas[i]:instance[i]})
-    #print(temp)
+    print(temp)
     fields_filters.append(temp)
 
 #REALIZACION DE APRIORI
 from apyori import apriori
 total_reglas=0
+file_columns=['Rule','Support','Confidence','Lift']
 for m in range(len(files)):
     archivo=files[m]
     print("Analizando fichero",archivo)
@@ -147,8 +148,8 @@ for m in range(len(files)):
     store_data.head()
     store_data = pd.read_excel(archivo, header=None)
     records = []
-    filas=len(store_data)-1
-    columnas_file=8
+    filas=len(store_data)
+    columnas_file=9
 
     for i in range(0, filas):
         records.append([str(store_data.values[i,j]) for j in range(0, columnas_file)])
@@ -159,6 +160,7 @@ for m in range(len(files)):
     contador_reglas=len(association_results)
     print("TOTAL DE REGLAS para el fichero",archivo,':',contador_reglas)
     total_reglas+= contador_reglas
+    transaction_export = []
     for item in association_results:
         # first index of the inner list
         # Contains base item and add item
@@ -175,4 +177,12 @@ for m in range(len(files)):
         print("Confidence: " + str(item[2][0][2]))
         print("Lift: " + str(item[2][0][3]))
         print("=====================================")
+        transaction_export.append([items[0] + " -> " + items[1],
+                                   str("{:10.4f}".format(item[1])),
+                                   str("{:10.2f}".format(item[2][0][2])),
+                                   str("{:10.2f}".format(item[2][0][3]))
+                                   ])
+    df = pd.DataFrame(transaction_export, columns=file_columns)
+    name = './ClusteringResult/cluster_kmedoidesRULESk=' + str(m) + '.csv'
+    df.to_csv(name, index=False)
 print("TOTAL DE REGLAS",total_reglas)
